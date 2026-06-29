@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Krugman/Flood-Garber Crisis Handout</title>
+  <style>
+    body {{
+      color: #172026;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.35;
+      margin: 32px;
+    }}
+    h1 {{
+      font-size: 24px;
+      margin: 0 0 8px;
+    }}
+    h2 {{
+      font-size: 15px;
+      margin: 20px 0 6px;
+    }}
+    p {{
+      margin: 6px 0;
+    }}
+    table {{
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 8px;
+    }}
+    th, td {{
+      border-bottom: 1px solid #d8dee4;
+      padding: 6px 8px;
+      text-align: left;
+    }}
+    .grid {{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }}
+    .chart {{
+      display: block;
+      max-width: 100%;
+      margin: 14px 0;
+    }}
+    .note {{
+      color: #5b6770;
+      font-size: 12px;
+    }}
+    @media print {{
+      body {{ margin: 18mm; }}
+    }}
+  </style>
+</head>
+<body>
+  <h1>First-Generation Balance-of-Payments Crisis</h1>
+  <p>
+    In the Krugman/Flood-Garber model, domestic credit grows under a fixed exchange rate.
+    Reserves fall while the peg is defended, but forward-looking speculators attack before
+    reserves mechanically reach zero, when the shadow floating exchange rate reaches the peg.
+  </p>
+
+  {image_html}
+
+  <div class="grid">
+    <section>
+      <h2>Parameter Values</h2>
+      <table>
+        <tr><th>Parameter</th><th>Value</th></tr>
+        <tr><td>Initial domestic credit D0</td><td>{domestic_credit0:.3f}</td></tr>
+        <tr><td>Initial reserves R0</td><td>{reserves0:.3f}</td></tr>
+        <tr><td>Credit growth mu</td><td>{credit_growth:.3f}</td></tr>
+        <tr><td>Money-demand semi-elasticity alpha</td><td>{alpha:.3f}</td></tr>
+        <tr><td>Peg sbar</td><td>{peg:.3f}</td></tr>
+        <tr><td>Foreign rate i*</td><td>{foreign_rate:.3f}</td></tr>
+      </table>
+    </section>
+    <section>
+      <h2>Key Results</h2>
+      <table>
+        <tr><th>Statistic</th><th>Value</th></tr>
+        <tr><td>Rational attack time</td><td>{attack_time:.3f}</td></tr>
+        <tr><td>Mechanical exhaustion time</td><td>{mechanical_time:.3f}</td></tr>
+        <tr><td>Lead time</td><td>{lead_time:.3f}</td></tr>
+        <tr><td>Reserves just before attack</td><td>{reserves_attack:.3f}</td></tr>
+      </table>
+    </section>
+  </div>
+
+  <h2>Equations</h2>
+  <p>Fixed peg: R(t) = R0 - mu * t, so t0 = R0 / mu.</p>
+  <p>Shadow float: s_tilde(t) = D0 + mu * t + alpha * (i* + mu).</p>
+  <p>Attack condition: s_tilde(tc) = sbar. Under a consistent peg, tc = t0 - alpha.</p>
+</body>
+</html>
