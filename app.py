@@ -53,8 +53,8 @@ def _render_notation_legend(params: CrisisParams, result) -> None:
     )
     right.markdown(
         rf"""
-- $\bar{{s}}$ - fixed peg, currently {params.peg:.2f}
-- $\tilde{{s}}(t)$ - shadow floating exchange rate after collapse
+- $\bar{{S}}$ - fixed peg, currently {params.peg:.2f}
+- $\tilde{{S}}(t)$ - shadow floating exchange rate after collapse
 - $t_0$ - mechanical reserve-exhaustion date, currently {result.mechanical_exhaustion_time:.2f}
 - $t_c$ - rational speculative-attack date, currently {result.analytical_attack_time:.2f}
 - $R(t_c^-)$ - reserves just before the attack, currently {result.reserves_before_attack:.2f}
@@ -63,15 +63,17 @@ def _render_notation_legend(params: CrisisParams, result) -> None:
 
 
 def _render_model_equations() -> None:
-    st.markdown("The model combines money demand, PPP, UIP, and the central-bank balance sheet:")
+    st.markdown(
+        "The app uses the normalized linear Flood-Garber form. Foreign prices, the money-demand "
+        "intercept, and the exchange-rate scale are normalized so the core system is:"
+    )
     st.latex(
         r"""
 \begin{aligned}
-m_t - p_t &= -\alpha i_t \\
-p_t &= s_t \\
-i_t &= i^* + \dot{s}_t \\
 M_t &= D_t + R_t \\
-D_t &= D_0 + \mu t
+D_t &= D_0 + \mu t \\
+M_t &= S_t - \alpha i_t \\
+i_t &= i^* + \dot{S}_t
 \end{aligned}
         """
     )
@@ -79,7 +81,8 @@ D_t &= D_0 + \mu t
     st.latex(
         r"""
 \begin{aligned}
-\dot{s}_t &= 0,\quad i_t = i^* \\
+\dot{S}_t &= 0,\quad i_t = i^* \\
+\bar{M} &= \bar{S} - \alpha i^* \\
 R(t) &= R_0 - \mu t \\
 t_0 &= \frac{R_0}{\mu}
 \end{aligned}
@@ -88,22 +91,22 @@ t_0 &= \frac{R_0}{\mu}
     st.markdown("After a collapse, reserves are zero and the no-bubble shadow float is:")
     st.latex(
         r"""
-\tilde{s}(t) = D_0 + \mu t + \alpha(i^* + \mu)
+\tilde{S}(t) = D_0 + \mu t + \alpha(i^* + \mu)
         """
     )
     st.markdown("The rational attack occurs at the first crossing of the shadow float and the peg:")
     st.latex(
         r"""
 \begin{aligned}
-\tilde{s}(t_c) &= \bar{s} \\
-t_c &= \frac{\bar{s} - \alpha(i^*+\mu) - D_0}{\mu}
+\tilde{S}(t_c) &= \bar{S} \\
+t_c &= \frac{\bar{S} - \alpha(i^*+\mu) - D_0}{\mu}
 \end{aligned}
         """
     )
     st.markdown("With a fixed-regime-consistent peg, the textbook timing result follows:")
     st.latex(
         r"""
-\bar{s} = D_0 + R_0 + \alpha i^*
+\bar{S} = D_0 + R_0 + \alpha i^*
 \quad\Longrightarrow\quad
 t_c = t_0 - \alpha
         """
@@ -199,10 +202,10 @@ with st.sidebar:
     consistent_peg = domestic_credit0 + reserves0 + alpha * foreign_rate
     if keep_consistent_peg:
         peg = consistent_peg
-        st.metric("Fixed peg sbar", f"{peg:.2f}")
+        st.metric("Fixed peg Sbar", f"{peg:.2f}")
     else:
         peg = st.number_input(
-            "Fixed peg sbar",
+            "Fixed peg Sbar",
             min_value=1.0,
             max_value=300.0,
             value=float(consistent_peg),
@@ -298,7 +301,7 @@ with analysis_tab:
             "reserves0": "Initial reserves R0",
             "domestic_credit0": "Initial domestic credit D0",
             "foreign_rate": "Foreign interest rate i*",
-            "peg": "Fixed peg sbar",
+            "peg": "Fixed peg Sbar",
         }.get,
     )
     st.plotly_chart(

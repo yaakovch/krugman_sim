@@ -10,15 +10,16 @@ The primary audience is mixed: students, instructors, and technically curious re
 
 ## Model
 
-The model is continuous-time, perfect-foresight, log-linear money demand:
+The implemented model is the normalized linear Flood-Garber teaching form. Foreign prices, the
+money-demand intercept, and the exchange-rate scale are normalized so the app can focus on the
+crisis-timing mechanism:
 
-- Money demand: `m - p = -alpha * i`
-- PPP: `p = s`
-- UIP: `i = i_star + ds/dt`
 - Money supply: `M = D + R`
 - Domestic credit: `D(t) = D0 + mu * t`
+- Linear money demand in exchange-rate units: `M = S - alpha * i`
+- Linear perfect-foresight interest parity: `i = i_star + dS/dt`
 
-While the peg is defended, `s = sbar`, `ds/dt = 0`, and reserves fall one-for-one with domestic credit:
+While the peg is defended, `S = Sbar`, `dS/dt = 0`, and reserves fall one-for-one with domestic credit:
 
 `R(t) = R0 - mu * t`
 
@@ -28,13 +29,13 @@ Mechanical exhaustion is:
 
 After collapse, reserves are zero and the no-bubble shadow float is:
 
-`s_tilde(t) = D0 + mu * t + alpha * (i_star + mu)`
+`S_tilde(t) = D0 + mu * t + alpha * (i_star + mu)`
 
-The rational attack time is the first `t` such that `s_tilde(t) = sbar`:
+The rational attack time is the first `t` such that `S_tilde(t) = Sbar`:
 
-`tc = (sbar - alpha * (i_star + mu) - D0) / mu`
+`tc = (Sbar - alpha * (i_star + mu) - D0) / mu`
 
-For an internally consistent peg, `sbar = D0 + R0 + alpha * i_star`, so:
+For an internally consistent peg, `Sbar = D0 + R0 + alpha * i_star`, so:
 
 `tc = t0 - alpha`
 

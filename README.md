@@ -4,7 +4,7 @@ Interactive Streamlit app and notebook for the first-generation balance-of-payme
 
 ## Economics in Brief
 
-Under a fixed exchange rate, domestic credit grows while the central bank defends the peg by selling reserves. Reserves therefore fall over time:
+The app implements a normalized linear Flood-Garber version of the Krugman first-generation crisis model. Foreign prices, the money-demand intercept, and the exchange-rate scale are normalized. Domestic credit grows while the central bank defends the peg by selling reserves, so reserves fall over time:
 
 $$
 R(t) = R_0 - \mu t
@@ -19,13 +19,13 @@ $$
 The shadow floating exchange rate after collapse is:
 
 $$
-\tilde{s}(t) = D_0 + \mu t + \alpha(i^* + \mu)
+\tilde{S}(t) = D_0 + \mu t + \alpha(i^* + \mu)
 $$
 
 The rational speculative attack occurs when the shadow rate reaches the peg. With a fixed-regime-consistent peg, this gives the textbook result:
 
 $$
-\tilde{s}(t_c) = \bar{s}
+\tilde{S}(t_c) = \bar{S}
 \quad\Longrightarrow\quad
 t_c = t_0 - \alpha
 $$

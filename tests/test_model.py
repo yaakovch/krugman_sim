@@ -94,3 +94,43 @@ def test_higher_alpha_and_credit_growth_move_crisis_earlier():
 
     assert attack_time(higher_alpha) < attack_time(params)
     assert attack_time(higher_growth) < attack_time(params)
+
+
+def test_randomized_consistent_params_match_normalized_flood_garber_identities():
+    rng = np.random.default_rng(20260629)
+
+    for _ in range(100):
+        credit_growth = rng.uniform(0.25, 6.0)
+        alpha = rng.uniform(0.5, 6.0)
+        reserves0 = rng.uniform((alpha + 2.0) * credit_growth, 120.0)
+        domestic_credit0 = rng.uniform(5.0, 120.0)
+        foreign_rate = rng.uniform(0.0, 0.12)
+        params = CrisisParams(
+            domestic_credit0=float(domestic_credit0),
+            reserves0=float(reserves0),
+            credit_growth=float(credit_growth),
+            alpha=float(alpha),
+            peg=float(domestic_credit0 + reserves0 + alpha * foreign_rate),
+            foreign_rate=float(foreign_rate),
+            horizon=float(reserves0 / credit_growth + 5.0),
+            dt=0.37,
+        )
+
+        t0 = mechanical_exhaustion_time(params)
+        tc = attack_time(params)
+
+        assert params.is_money_market_consistent
+        assert math.isclose(money_demand_fixed(params), params.money_stock_fixed)
+        assert math.isclose(t0, params.reserves0 / params.credit_growth)
+        assert math.isclose(tc, t0 - params.alpha, abs_tol=1e-10)
+        assert math.isclose(shadow_rate(tc, params), params.peg, abs_tol=1e-9)
+        assert math.isclose(
+            reserves_before_attack(params),
+            params.alpha * params.credit_growth,
+            rel_tol=1e-10,
+            abs_tol=1e-9,
+        )
+
+        result = deterministic_simulation(params)
+        assert result.numerical_attack_time is not None
+        assert math.isclose(result.numerical_attack_time, tc, abs_tol=1e-8)

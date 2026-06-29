@@ -252,7 +252,7 @@ def sensitivity_sweep_figure(
         "reserves0": "Initial reserves R0",
         "domestic_credit0": "Initial domestic credit D0",
         "foreign_rate": "Foreign interest rate i*",
-        "peg": "Fixed peg sbar",
+        "peg": "Fixed peg Sbar",
     }
     current = float(getattr(params, parameter))
     if low is None:

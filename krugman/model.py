@@ -61,7 +61,7 @@ class CrisisParams:
 
     @property
     def money_demand_at_peg(self) -> float:
-        """Money demand implied by PPP/UIP under the fixed peg."""
+        """Linear money demand implied by the fixed peg."""
 
         return self.peg - self.alpha * self.foreign_rate
 
@@ -121,8 +121,9 @@ def mechanical_exhaustion_time(params: CrisisParams) -> float:
 def shadow_rate(t: float | np.ndarray, params: CrisisParams) -> float | np.ndarray:
     """Post-collapse no-bubble shadow floating exchange rate.
 
-    Under the linear Cagan money-demand setup, after reserves are gone M = D and
-    the credit path depreciates at rate mu, so s_tilde(t) = D(t) + alpha(i* + mu).
+    Under the normalized linear Flood-Garber setup, after reserves are gone
+    M = D and the credit path depreciates at rate mu, so
+    S_tilde(t) = D(t) + alpha(i* + mu).
     """
 
     value = domestic_credit(t, params) + params.alpha * (
@@ -132,7 +133,7 @@ def shadow_rate(t: float | np.ndarray, params: CrisisParams) -> float | np.ndarr
 
 
 def raw_attack_time(params: CrisisParams) -> float:
-    """Unclipped closed-form crossing date for s_tilde(t) = peg."""
+    """Unclipped closed-form crossing date for S_tilde(t) = peg."""
 
     numerator = (
         params.peg
@@ -177,7 +178,7 @@ def no_arbitrage_gap(t: float | np.ndarray, params: CrisisParams) -> float | np.
 
 
 def money_demand_fixed(params: CrisisParams) -> float:
-    """Money demand under the peg: m = p - alpha i = sbar - alpha i*."""
+    """Money demand under the peg: M = Sbar - alpha i*."""
 
     return params.peg - params.alpha * params.foreign_rate
 
