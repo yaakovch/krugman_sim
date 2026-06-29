@@ -206,11 +206,8 @@ If `sbar = D0 + R0 + alpha * i*`, then `tc = t0 - alpha`.
 
 with analysis_tab:
     st.subheader("Comparative Statics")
-    top_left, top_right = st.columns(2)
-    with top_left:
-        st.plotly_chart(crisis_timing_curve_figure(params), width="stretch", config=PLOT_CONFIG)
-    with top_right:
-        st.plotly_chart(mechanical_vs_attack_figure(result), width="stretch", config=PLOT_CONFIG)
+    st.plotly_chart(crisis_timing_curve_figure(params), width="stretch", config=PLOT_CONFIG)
+    st.plotly_chart(mechanical_vs_attack_figure(result), width="stretch", config=PLOT_CONFIG)
 
     sweep_parameter = st.selectbox(
         "Sensitivity parameter",

@@ -211,7 +211,6 @@ def crisis_timing_curve_figure(
 
 
 def mechanical_vs_attack_figure(result: DeterministicResult) -> go.Figure:
-    params = result.params
     attack = result.analytical_attack_time
     mechanical = result.mechanical_exhaustion_time
     gap = mechanical - attack
@@ -237,13 +236,6 @@ def mechanical_vs_attack_figure(result: DeterministicResult) -> go.Figure:
     fig.update_yaxes(title="Time", range=[0, max(mechanical * 1.2, 1)])
     fig.update_xaxes(title="")
     fig.update_layout(title="Rational Attack vs Mechanical Exhaustion")
-    if params.is_money_market_consistent:
-        fig.add_annotation(
-            x=0.5,
-            y=max(attack, mechanical) * 0.55,
-            text=f"With a consistent peg, the gap equals alpha = {params.alpha:.2f}.",
-            showarrow=False,
-        )
     return fig
 
 
