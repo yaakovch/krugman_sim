@@ -39,6 +39,70 @@ def _scenario_label(key: str) -> str:
     return SCENARIOS[key].label
 
 
+def _render_model_equations() -> None:
+    st.markdown("The model combines money demand, PPP, UIP, and the central-bank balance sheet:")
+    st.latex(
+        r"""
+\begin{aligned}
+m_t - p_t &= -\alpha i_t \\
+p_t &= s_t \\
+i_t &= i^* + \dot{s}_t \\
+M_t &= D_t + R_t \\
+D_t &= D_0 + \mu t
+\end{aligned}
+        """
+    )
+    st.markdown("While the peg is defended, the exchange rate is fixed, so reserves absorb credit growth:")
+    st.latex(
+        r"""
+\begin{aligned}
+\dot{s}_t &= 0,\quad i_t = i^* \\
+R(t) &= R_0 - \mu t \\
+t_0 &= \frac{R_0}{\mu}
+\end{aligned}
+        """
+    )
+    st.markdown("After a collapse, reserves are zero and the no-bubble shadow float is:")
+    st.latex(
+        r"""
+\tilde{s}(t) = D_0 + \mu t + \alpha(i^* + \mu)
+        """
+    )
+    st.markdown("The rational attack occurs at the first crossing of the shadow float and the peg:")
+    st.latex(
+        r"""
+\begin{aligned}
+\tilde{s}(t_c) &= \bar{s} \\
+t_c &= \frac{\bar{s} - \alpha(i^*+\mu) - D_0}{\mu}
+\end{aligned}
+        """
+    )
+    st.markdown("With a fixed-regime-consistent peg, the textbook timing result follows:")
+    st.latex(
+        r"""
+\bar{s} = D_0 + R_0 + \alpha i^*
+\quad\Longrightarrow\quad
+t_c = t_0 - \alpha
+        """
+    )
+
+
+def _render_current_timing(params: CrisisParams, result) -> None:
+    st.markdown("For the current slider values:")
+    st.latex(
+        rf"""
+\begin{{aligned}}
+t_0 &= \frac{{R_0}}{{\mu}}
+     = \frac{{{params.reserves0:.2f}}}{{{params.credit_growth:.2f}}}
+     = {result.mechanical_exhaustion_time:.2f} \\
+t_c &= {result.analytical_attack_time:.2f} \\
+t_0 - t_c &= {result.mechanical_exhaustion_time - result.analytical_attack_time:.2f} \\
+R(t_c^-) &= {result.reserves_before_attack:.2f}
+\end{{aligned}}
+        """
+    )
+
+
 st.title("Krugman / Flood-Garber Balance-of-Payments Crisis")
 st.caption(
     "An interactive teaching tool for the first-generation crisis result: the rational attack "
@@ -186,23 +250,8 @@ with core_tab:
     )
 
     with st.expander("Show the math"):
-        st.markdown(
-            """
-Fixed regime:
-
-`R(t) = R0 - mu * t`, so `t0 = R0 / mu`.
-
-Shadow float:
-
-`s_tilde(t) = D0 + mu * t + alpha * (i* + mu)`.
-
-Attack condition:
-
-`s_tilde(tc) = sbar`.
-
-If `sbar = D0 + R0 + alpha * i*`, then `tc = t0 - alpha`.
-            """
-        )
+        _render_model_equations()
+        _render_current_timing(params, result)
 
 with analysis_tab:
     st.subheader("Comparative Statics")
@@ -316,32 +365,12 @@ with math_tab:
     st.markdown(
         """
 The app implements the linear Flood-Garber version of the Krugman first-generation crisis model.
-
-Money demand:
-
-`m - p = -alpha * i`
-
-PPP:
-
-`p = s`
-
-UIP under perfect foresight:
-
-`i = i* + ds/dt`
-
-Money supply:
-
-`M = D + R`
-
-Domestic credit:
-
-`D(t) = D0 + mu * t`
-
-The shadow float is the no-bubble post-collapse exchange rate. The peg becomes vulnerable when
-the shadow float reaches the fixed rate, because an attack can exhaust remaining reserves without
-requiring a discrete exchange-rate jump at the moment of collapse.
+The shadow float is the no-bubble post-collapse exchange rate; the peg becomes vulnerable
+when that shadow float reaches the fixed rate.
         """
     )
+    _render_model_equations()
+    _render_current_timing(params, result)
     st.dataframe(
         {
             "Quantity": [

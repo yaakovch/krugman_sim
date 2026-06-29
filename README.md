@@ -6,27 +6,29 @@ Interactive Streamlit app and notebook for the first-generation balance-of-payme
 
 Under a fixed exchange rate, domestic credit grows while the central bank defends the peg by selling reserves. Reserves therefore fall over time:
 
-```text
-R(t) = R0 - mu * t
-```
+$$
+R(t) = R_0 - \mu t
+$$
 
 If markets were not forward-looking, reserves would mechanically reach zero at:
 
-```text
-t0 = R0 / mu
-```
+$$
+t_0 = \frac{R_0}{\mu}
+$$
 
 The shadow floating exchange rate after collapse is:
 
-```text
-s_tilde(t) = D0 + mu * t + alpha * (i* + mu)
-```
+$$
+\tilde{s}(t) = D_0 + \mu t + \alpha(i^* + \mu)
+$$
 
 The rational speculative attack occurs when the shadow rate reaches the peg. With a fixed-regime-consistent peg, this gives the textbook result:
 
-```text
-tc = t0 - alpha
-```
+$$
+\tilde{s}(t_c) = \bar{s}
+\quad\Longrightarrow\quad
+t_c = t_0 - \alpha
+$$
 
 So the crisis arrives before reserves mechanically hit zero, and reserves are still positive immediately before the attack.
 
