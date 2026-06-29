@@ -164,29 +164,26 @@ core_tab, analysis_tab, mc_tab, export_tab, math_tab = st.tabs(
 
 with core_tab:
     st.subheader("Deterministic Crisis Dynamics")
-    left, right = st.columns(2)
-    with left:
-        st.plotly_chart(figures["domestic_credit"], width="stretch", config=PLOT_CONFIG)
-        st.markdown(
-            "Domestic credit grows at a constant absolute rate. Under the peg, reserve sales "
-            "absorb that credit expansion."
-        )
-        st.plotly_chart(figures["shadow_rate"], width="stretch", config=PLOT_CONFIG)
-        st.markdown(
-            "The attack occurs at the crossing: once the shadow float reaches the peg, holding "
-            "domestic money after collapse is no longer dominated by attacking the peg."
-        )
-    with right:
-        st.plotly_chart(figures["reserves"], width="stretch", config=PLOT_CONFIG)
-        st.markdown(
-            "Actual reserves drop discretely at the attack. The dotted path shows when reserves "
-            "would have reached zero without forward-looking speculation."
-        )
-        st.plotly_chart(figures["actual_exchange_rate"], width="stretch", config=PLOT_CONFIG)
-        st.markdown(
-            "The exchange rate is fixed before the crisis and follows the shadow float after "
-            "the peg collapses."
-        )
+    st.plotly_chart(figures["domestic_credit"], width="stretch", config=PLOT_CONFIG)
+    st.markdown(
+        "Domestic credit grows at a constant absolute rate. Under the peg, reserve sales "
+        "absorb that credit expansion."
+    )
+    st.plotly_chart(figures["reserves"], width="stretch", config=PLOT_CONFIG)
+    st.markdown(
+        "Actual reserves drop discretely at the attack. The dotted path shows when reserves "
+        "would have reached zero without forward-looking speculation."
+    )
+    st.plotly_chart(figures["shadow_rate"], width="stretch", config=PLOT_CONFIG)
+    st.markdown(
+        "The attack occurs at the crossing: once the shadow float reaches the peg, holding "
+        "domestic money after collapse is no longer dominated by attacking the peg."
+    )
+    st.plotly_chart(figures["actual_exchange_rate"], width="stretch", config=PLOT_CONFIG)
+    st.markdown(
+        "The exchange rate is fixed before the crisis and follows the shadow float after "
+        "the peg collapses."
+    )
 
     with st.expander("Show the math"):
         st.markdown(
