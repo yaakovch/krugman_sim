@@ -39,6 +39,29 @@ def _scenario_label(key: str) -> str:
     return SCENARIOS[key].label
 
 
+def _render_notation_legend(params: CrisisParams, result) -> None:
+    st.markdown("**Notation legend**")
+    left, right = st.columns(2)
+    left.markdown(
+        rf"""
+- $D_0$ - initial domestic credit, currently {params.domestic_credit0:.2f}
+- $R_0$ - initial reserves, currently {params.reserves0:.2f}
+- $\mu$ - domestic-credit growth rate, currently {params.credit_growth:.2f}
+- $\alpha$ - interest semi-elasticity of money demand, currently {params.alpha:.2f}
+- $i^*$ - foreign interest rate, currently {params.foreign_rate:.3f}
+        """
+    )
+    right.markdown(
+        rf"""
+- $\bar{{s}}$ - fixed peg, currently {params.peg:.2f}
+- $\tilde{{s}}(t)$ - shadow floating exchange rate after collapse
+- $t_0$ - mechanical reserve-exhaustion date, currently {result.mechanical_exhaustion_time:.2f}
+- $t_c$ - rational speculative-attack date, currently {result.analytical_attack_time:.2f}
+- $R(t_c^-)$ - reserves just before the attack, currently {result.reserves_before_attack:.2f}
+        """
+    )
+
+
 def _render_model_equations() -> None:
     st.markdown("The model combines money demand, PPP, UIP, and the central-bank balance sheet:")
     st.latex(
@@ -235,13 +258,13 @@ with core_tab:
     )
     st.plotly_chart(figures["reserves"], width="stretch", config=PLOT_CONFIG)
     st.markdown(
-        "Actual reserves drop discretely at the attack. The dotted path shows when reserves "
-        "would have reached zero without forward-looking speculation."
+        "Actual reserves drop discretely at the attack. The dotted path marks the no-attack "
+        "reserve-exhaustion date."
     )
     st.plotly_chart(figures["shadow_rate"], width="stretch", config=PLOT_CONFIG)
     st.markdown(
-        "The attack occurs at the crossing: once the shadow float reaches the peg, holding "
-        "domestic money after collapse is no longer dominated by attacking the peg."
+        "The attack occurs at the crossing. Once the shadow float reaches the peg, attacking "
+        "the peg exhausts reserves without requiring an exchange-rate jump at collapse."
     )
     st.plotly_chart(figures["actual_exchange_rate"], width="stretch", config=PLOT_CONFIG)
     st.markdown(
@@ -250,6 +273,7 @@ with core_tab:
     )
 
     with st.expander("Show the math"):
+        _render_notation_legend(params, result)
         _render_model_equations()
         _render_current_timing(params, result)
 
@@ -369,6 +393,7 @@ The shadow float is the no-bubble post-collapse exchange rate; the peg becomes v
 when that shadow float reaches the fixed rate.
         """
     )
+    _render_notation_legend(params, result)
     _render_model_equations()
     _render_current_timing(params, result)
     st.dataframe(
